@@ -1,12 +1,10 @@
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 
 from src.Model import Model
 
 class BRSagent():
-    def __init__(self, model=Model(), n_episodes=100):
-        self.w = np.random.uniform(-1, 1, size=4)
+    def __init__(self, model=Model(), n_episodes=1000):
+        self.w = np.random.normal(loc=-1, scale=1, size=4)
         self.n_episodes = n_episodes
         self.model = model
         self.best_w = self.w.copy()
@@ -18,7 +16,7 @@ class BRSagent():
 
     def learn(self):
         for episode_ind in range(self.n_episodes):
-            self.w = np.random.uniform(-1, 1, size=4)
+            self.w = np.random.normal(loc=-1, scale=1, size=4)
             r = self.rollout(self.w)
 
             print(f"Episode {episode_ind}, best_reward = {self.best_reward:.2f}")
@@ -26,7 +24,6 @@ class BRSagent():
             if r > self.best_reward:
                 self.best_reward = r
                 self.best_w = self.w.copy()
-
 
     def rollout(self, w):
         state = self.reset_state()

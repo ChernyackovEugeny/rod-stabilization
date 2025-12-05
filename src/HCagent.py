@@ -1,12 +1,10 @@
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 
 from src.Model import Model
 
 class HCagent():
-    def __init__(self, model=Model(), sigma=0.5, sigma_decay=0.995, n_episodes=100):
-        self.w = np.random.uniform(-1, 1, size=4)
+    def __init__(self, model=Model(), sigma=1, sigma_decay=0.99, n_episodes=1000):
+        self.w = np.random.uniform(-0.4, 0.4, size=4)
         self.best_w = self.w.copy()
         self.sigma = sigma
         self.sigma_decay = sigma_decay
@@ -25,7 +23,7 @@ class HCagent():
 
             reward = self.rollout(new_w)
 
-            print(f"Episode {episode_ind}, best_reward = {self.best_reward:.2f}")
+            # print(f"Episode {episode_ind}, best_reward = {self.best_reward:.2f}")
 
             if reward > self.best_reward:
                 self.w = new_w

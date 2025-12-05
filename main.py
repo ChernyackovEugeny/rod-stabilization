@@ -6,9 +6,12 @@ from src.Visualizer import Visualizer
 from src.Model import Model
 from src.BRSagent import BRSagent
 from src.HCagent import HCagent
-from src.PGagent import PGagent
+from src.ACagent import ACagent
 
-agent = HCagent(n_episodes=100)
-agent.learn()
-visual = Visualizer()
-visual.animate(agent.states)
+w = []
+for i in range(10):
+    print(i)
+    agent = BRSagent(n_episodes=1000)
+    agent.learn()
+    w.append(agent.best_w)
+print(np.mean(w), np.max(w), w)
