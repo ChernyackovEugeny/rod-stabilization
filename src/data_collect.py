@@ -5,9 +5,9 @@ import pickle
 
 from src.Model import Model
 
-import numpy as np
-
-from src.Model import Model
+# переписаны все классы, тк для полных данных сохраняют все шаги всех эпизодов для всех экспериментов(агенитов)
+# полученные данные - трехмерные матрицы (номер_агента x номер_эпизода x номер_временного_шага) для actions, results и
+# (номер_агента x номер_эпизода x номер_временного_шага x 4(размерность_состояния))
 
 class BRSagent():
     def __init__(self, model=Model(), n_episodes=1000):
@@ -130,7 +130,7 @@ class BestBRSagent():
         return state
 
 class HCagent():
-    def __init__(self, model=Model(), sigma=1, sigma_decay=0.99, n_episodes=1000):
+    def __init__(self, model=Model(), sigma=1, sigma_decay=0.999, n_episodes=1000):
         self.w = np.random.uniform(-0.4, 0.4, size=4)
         self.best_w = self.w.copy()
         self.sigma = sigma
@@ -200,7 +200,7 @@ class HCagent():
         return state
 
 class ACagent():
-    def __init__(self, lr_actor=3e-4, lr_critic=1e-2, gamma=0.95, model=Model(), n_episodes=1000):
+    def __init__(self, lr_actor=5e-4, lr_critic=1e-3, gamma=0.95, model=Model(), n_episodes=1000):
         self.lr_actor = lr_actor
         self.lr_critic = lr_critic
         self.gamma = gamma
@@ -209,7 +209,7 @@ class ACagent():
 
         self.w = np.random.uniform(-1, 1, size=4)
         self.tetta_mu = np.zeros(4)
-        self.tetta_sigma = np.ones(4) * 0.1
+        self.tetta_sigma = np.ones(4) * np.log(0.5)
 
         self.sigma_clip_min = 0.05
         self.sigma_clip_max = 2.0
@@ -306,12 +306,6 @@ class ACagent():
         return state
 
 
-
-
-
-
-# --- 1. ОДИН ПРОГОН ОДНОГО АГЕНТА --- #
-
 def BRS_experiment(_):
     agent = BRSagent()
     agent.learn()
@@ -338,6 +332,7 @@ def AC_experiment(_):
         "actions": agent.all_actions,
         "rewards": agent.all_rewards
     }
+
 def BestBRS_experiment(_):
     agent = BestBRSagent()
     agent.learn()
@@ -347,7 +342,6 @@ def BestBRS_experiment(_):
         "rewards": agent.all_rewards
     }
 
-
 def pad_episode(states, actions, rewards, max_steps, state_dim=4):
     T = len(rewards)
 
@@ -355,17 +349,13 @@ def pad_episode(states, actions, rewards, max_steps, state_dim=4):
     padded_actions = np.zeros(max_steps, dtype=np.float32)
     padded_rewards = np.zeros(max_steps, dtype=np.float32)
 
-    padded_states[:T]  = states
+    padded_states[:T] = states
     padded_actions[:T] = actions
     padded_rewards[:T] = rewards
 
     return padded_states, padded_actions, padded_rewards
 
-
-# ===========================
-# 3. ПАДДИНГ ВСЕХ ЭПИЗОДОВ ОДНОГО ПРОГОНА
-# ===========================
-
+# ПАДДИНГ ВСЕХ ЭПИЗОДОВ ОДНОГО ПРОГОНА
 def pad_run_all_episodes(run, max_steps, max_episodes, state_dim=4):
 
     padded_states  = np.zeros((max_episodes, max_steps, state_dim), dtype=np.float32)
@@ -382,16 +372,13 @@ def pad_run_all_episodes(run, max_steps, max_episodes, state_dim=4):
             max_steps=max_steps,
             state_dim=state_dim
         )
-        padded_states[ep]  = s
+        padded_states[ep] = s
         padded_actions[ep] = a
         padded_rewards[ep] = r
 
     return padded_states, padded_actions, padded_rewards
 
-
-# ===========================
-# 4. ЗАПУСК ВСЕХ АГЕНТОВ + ПАДДИНГ ДО ЕДИНОЙ ФОРМЫ
-# ===========================
+# ЗАПУСК ВСЕХ АГЕНТОВ + ПАДДИНГ ДО ЕДИНОЙ ФОРМЫ
 
 def run_all(n_repeats=10, max_steps=1000):
 
@@ -433,11 +420,7 @@ def run_all(n_repeats=10, max_steps=1000):
 
     return final_results
 
-
-# ===========================
-# 5. MAIN
-# ===========================
-
+# MAIN
 if __name__ == "__main__":
     N_REPEATS = 20
     MAX_STEPS = 1000

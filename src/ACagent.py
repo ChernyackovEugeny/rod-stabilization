@@ -3,7 +3,7 @@ import numpy as np
 from src.Model import Model
 
 class ACagent():
-    def __init__(self, lr_actor=3e-4, lr_critic=1e-2, gamma=0.95, model=Model(), n_episodes=1000):
+    def __init__(self, lr_actor=5e-4, lr_critic=1e-3, gamma=0.95, model=Model(), n_episodes=1000):
         self.lr_actor = lr_actor
         self.lr_critic = lr_critic
         self.gamma = gamma
@@ -12,7 +12,8 @@ class ACagent():
 
         self.w = np.random.uniform(-1, 1, size=4)
         self.tetta_mu = np.zeros(4)
-        self.tetta_sigma = np.ones(4) * 0.1
+        # np.log(0.5) для начального значения sigma, подобрано при выборе гиперпараметров
+        self.tetta_sigma = np.ones(4) * np.log(0.5)
 
         self.sigma_clip_min = 0.05
         self.sigma_clip_max = 2.0

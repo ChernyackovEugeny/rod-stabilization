@@ -10,9 +10,7 @@ def plot_and_save_agent_metrics(agent_results, upright_threshold=0.087, save_dir
     os.makedirs(save_dir, exist_ok=True)
     agents = list(agent_results.keys())
 
-    # ===============================
     # ТЕКСТОВЫЙ ВЫВОД МЕТРИК
-    # ===============================
     for agent_name in agents:
         print(f"\n=== {agent_name} ===")
         rewards = agent_results[agent_name]["rewards"]  # (repeats, episodes, steps)
@@ -48,9 +46,7 @@ def plot_and_save_agent_metrics(agent_results, upright_threshold=0.087, save_dir
         print(f"Минимальное количество шагов в вертикали: {np.min(upright_steps)}")
         print(f"Максимальное количество шагов в вертикали: {np.max(upright_steps)}")
 
-    # ===============================
     # ГРАФИКИ
-    # ===============================
     # 1. Усреднённое вознаграждение по шагам
     plt.figure(figsize=(10, 5))
     for agent_name in agents:
