@@ -19,7 +19,7 @@ class BRSagent():
             self.w = np.random.normal(loc=-1, scale=1, size=4)
             r = self.rollout(self.w)
 
-            print(f"Episode {episode_ind}, best_reward = {self.best_reward:.2f}")
+            # print(f"Episode {episode_ind}, best_reward = {self.best_reward:.2f}")
 
             if r > self.best_reward:
                 self.best_reward = r
