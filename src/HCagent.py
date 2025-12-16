@@ -3,7 +3,7 @@ import numpy as np
 from src.Model import Model
 
 class HCagent():
-    def __init__(self, model=Model(), sigma=1, sigma_decay=0.999, n_episodes=1000):
+    def __init__(self, model=Model(), sigma=1, sigma_decay=0.998, n_episodes=1000):
         self.w = np.random.uniform(-0.4, 0.4, size=4)
         self.best_w = self.w.copy()
         self.sigma = sigma
